@@ -1,0 +1,94 @@
+public class Locker {
+    protected String lockerId;
+    protected boolean occupied;
+
+    public Locker(String lockerId) {
+        this.lockerId = lockerId;
+        this.occupied = false;
+    }
+
+    public void assign() {
+        occupied = true;
+        System.out.println("Locker " + lockerId + " assigned.");
+    }
+
+    public String describe() {
+        return "Locker " + lockerId + " (standard)";
+    }
+}
+
+
+public class LargeLocker extends Locker {
+    private double rentalFee;
+
+    public LargeLocker(String lockerId, double rentalFee) {
+        super(lockerId);              // initializes the inherited part first
+        this.rentalFee = rentalFee;
+    }
+
+    @Override
+    public String describe() {
+        return "Locker " + lockerId + " (large, fee: " + rentalFee + ")";
+    }
+}
+
+
+public class SmartLockerDemo {
+    public static void main(String[] args) {
+        Locker[] lockers = {
+            new Locker("A1"),
+            new LargeLocker("B2", 50.0),
+            new Locker("C3")
+        };
+
+        for (Locker locker : lockers) {
+            locker.assign();
+            System.out.println(locker.describe());  // runtime dispatch picks the right describe()
+        }
+    }
+}
+
+
+public class Patient {
+    protected String name;
+    protected int severity;   // 1 = critical, 5 = non-urgent
+
+    public Patient(String name, int severity) {
+        this.name = name;
+        this.severity = severity;
+    }
+
+    public String describe() {
+        return name + " (severity " + severity + ")";
+    }
+}
+
+
+public class EmergencyPatient extends Patient {
+    private String condition;
+
+    public EmergencyPatient(String name, int severity, String condition) {
+        super(name, severity);
+        this.condition = condition;
+    }
+
+    @Override
+    public String describe() {
+        return "EMERGENCY: " + name + " - " + condition + " (severity " + severity + ")";
+    }
+}
+
+
+public class TriageDemo {
+    public static void main(String[] args) {
+        Patient[] queue = {
+            new Patient("Ravi", 4),
+            new EmergencyPatient("Meena", 1, "chest pain"),
+            new Patient("Arjun", 5)
+        };
+
+        for (Patient p : queue) {
+            System.out.println(p.describe());
+        }
+    }
+}
